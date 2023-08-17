@@ -6,6 +6,12 @@ namespace DeepSlay
     {
         public override void InstallBindings()
         {
+            var uiViews = FindObjectsOfType<UIView>(true);
+            foreach (var uiView in uiViews)
+            {
+                Container.Bind(uiView.GetType()).FromComponentsInHierarchy().AsSingle();
+            }
+
             Container.Bind<BagRepository>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<BagController>().AsSingle().NonLazy();

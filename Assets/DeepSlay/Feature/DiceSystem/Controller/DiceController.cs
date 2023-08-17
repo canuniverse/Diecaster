@@ -1,35 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UniRx;
 using UnityEngine;
+using Zenject;
 
 namespace DeepSlay
 {
     public class DiceController : IDisposable
     {
+        private SignalBus _signalBus;
         private BagRepository _bagRepository;
-        
-        public DiceController(BagRepository bagRepository)
+
+        public DiceController(
+            SignalBus signalBus,
+            BagRepository bagRepository)
         {
+            _signalBus = signalBus;
             _bagRepository = bagRepository;
 
-            Update();
+            _signalBus.Subscribe<DiceBagClickedSignal>(OnDiceBagClicked);
         }
 
         public void Dispose()
         {
+            _signalBus.Unsubscribe<DiceBagClickedSignal>(OnDiceBagClicked);
         }
 
-        private void Update()
+        private void OnDiceBagClicked(DiceBagClickedSignal signal)
         {
-            Observable.EveryUpdate().Subscribe(_ =>
-            {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    DrawDices();
-                }
-            });
+            DrawDices();
         }
 
         private void DrawDices()
@@ -38,7 +37,7 @@ namespace DeepSlay
 
             var diceCount = 5;
             var dices = new List<DieModel>();
-            
+
             for (var i = 0; i < diceCount; i++)
             {
                 if (bag.Count < 1)
@@ -47,24 +46,26 @@ namespace DeepSlay
                 }
 
                 var die = bag.First();
-                
+
                 dices.Add(die);
                 _bagRepository.DiscardDeck.Add(die);
                 _bagRepository.DieModels.Remove(die);
             }
-            
+
             RollDices(dices);
         }
 
         private void RollDices(List<DieModel> dieModels)
         {
             var resultFaces = new List<Elements>();
-            
+
             foreach (var dieModel in dieModels)
             {
                 var face = dieModel.DieFaces.Random();
                 resultFaces.Add(face);
             }
+            
+            Debug.Log(resultFaces.Count);
         }
     }
 }
