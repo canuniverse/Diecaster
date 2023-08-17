@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "284d5c50d3f1ddd9fa7df3d382ea904732a9c2ff"
     },
+    "com.svermeulen.extenject": {
+      "version": "https://github.com/Arvis-Games/Extenject.git?path=UnityProject/Assets/Plugins/Zenject/Source",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "064984888042998f707ba1e462bc56d6831a60da"
+    },
     "com.unity.2d.animation": {
       "version": "7.0.9",
       "depth": 1,
