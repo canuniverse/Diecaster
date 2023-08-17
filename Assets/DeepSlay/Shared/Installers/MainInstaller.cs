@@ -1,3 +1,4 @@
+using DeepSlay.Feature.BattleSystem.Controller;
 using UnityEngine;
 using Zenject;
 
@@ -24,6 +25,7 @@ namespace DeepSlay
 
             Container.BindInterfacesAndSelfTo<BagController>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<DiceController>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<BattleController>().AsSingle().NonLazy();
         }
     }
 }

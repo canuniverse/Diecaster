@@ -91,6 +91,11 @@ namespace DeepSlay
                 view.transform.SetParent(parent, false);
                 view.SetDieFace(face);
             }
+            
+            _signalBus.Fire(new DiceSpawnCompletedSignal()
+            {
+                RolledFaces = diceFaces
+            });
         }
     }
 }
