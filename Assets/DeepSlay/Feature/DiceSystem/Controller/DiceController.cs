@@ -60,8 +60,7 @@ namespace DeepSlay
 
         private void ReshuffleDiscardDeck()
         {
-            var discardDeck = _bagRepository.DiscardDeck
-                .OrderBy(_ => UnityEngine.Random.value).ToList();
+            var discardDeck = _bagRepository.DiscardDeck.Randomize();
 
             _bagRepository.DieModels.AddNew(discardDeck);
             _bagRepository.DiscardDeck = new List<DieModel>();

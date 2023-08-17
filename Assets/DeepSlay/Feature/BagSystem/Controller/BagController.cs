@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DeepSlay
 {
@@ -38,7 +37,7 @@ namespace DeepSlay
                 }
             }
 
-            _bagRepository.DieModels = bag.OrderBy(_ => UnityEngine.Random.value).ToList();
+            _bagRepository.DieModels = bag.Randomize();
         }
     }
 }
