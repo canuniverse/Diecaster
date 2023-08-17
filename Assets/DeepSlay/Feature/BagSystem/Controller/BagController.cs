@@ -1,5 +1,6 @@
 using System;
-using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DeepSlay
 {
@@ -7,7 +8,7 @@ namespace DeepSlay
     {
         private DiceConfig _diceConfig;
         private BagRepository _bagRepository;
-        
+
         public BagController(
             BagRepository bagRepository,
             DiceConfig diceConfig)
@@ -26,17 +27,18 @@ namespace DeepSlay
         {
             var copyCount = 2;
             var dieModels = _diceConfig.DieModels;
+            var bag = new List<DieModel>();
 
             foreach (var dieModel in dieModels)
             {
                 for (var i = 0; i < copyCount; i++)
                 {
                     var clone = (DieModel)ObjectClone.DeepClone(dieModel);
-                    _bagRepository.DieModels.Add(clone);
+                    bag.Add(clone);
                 }
             }
-            
-            Debug.Log(_bagRepository.DieModels.Count);
+
+            _bagRepository.DieModels = bag.OrderBy(_ => UnityEngine.Random.value).ToList();
         }
     }
 }
