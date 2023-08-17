@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Zenject;
 
 namespace DeepSlay
@@ -9,14 +8,20 @@ namespace DeepSlay
     public class DiceController : IDisposable
     {
         private SignalBus _signalBus;
+        private DiceBagView _bagView;
         private BagRepository _bagRepository;
+        private DiceViewService _diceViewService;
 
         public DiceController(
             SignalBus signalBus,
+            DiceBagView diceBagView,
+            DiceViewService diceViewService,
             BagRepository bagRepository)
         {
             _signalBus = signalBus;
+            _bagView = diceBagView;
             _bagRepository = bagRepository;
+            _diceViewService = diceViewService;
 
             _signalBus.Subscribe<DiceBagClickedSignal>(OnDiceBagClicked);
         }
@@ -64,8 +69,20 @@ namespace DeepSlay
                 var face = dieModel.DieFaces.Random();
                 resultFaces.Add(face);
             }
-            
-            Debug.Log(resultFaces.Count);
+
+            SpawnDices(resultFaces);
+        }
+
+        private void SpawnDices(List<Elements> diceFaces)
+        {
+            for (var i = 0; i < diceFaces.Count; i++)
+            {
+                var face = diceFaces[i];
+                var view = _diceViewService.Spawn();
+                var parent = _bagView.DiceParents[i];
+                view.transform.SetParent(parent, false);
+                view.SetDieFace(face);
+            }
         }
     }
 }
