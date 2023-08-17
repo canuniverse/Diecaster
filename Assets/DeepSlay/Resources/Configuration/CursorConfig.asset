@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 241fadbf2e1449b28ef435196ad526ad, type: 3}
+  m_Name: CursorConfig
+  m_EditorClassIdentifier: 
+  CursorDefault: {fileID: 2800000, guid: 9002bf0aee25549a29c882c502c37ecd, type: 3}
+  CursorSelect: {fileID: 2800000, guid: d4bb2ffb93fe34c6bac9081f96b9f472, type: 3}
+  CursorSelectTap: {fileID: 2800000, guid: 588430a3336714f62b22ed2aa06dfe31, type: 3}
+  CursorGrab: {fileID: 2800000, guid: cb99f6bd868cf468e9d3bc262355e43c, type: 3}
+  CursorGrabbing: {fileID: 2800000, guid: 3e95968a031444dc4b644300b23cc26f, type: 3}

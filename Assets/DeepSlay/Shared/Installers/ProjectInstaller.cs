@@ -6,6 +6,7 @@ namespace DeepSlay
     {
         public override void InstallBindings()
         {
+            Container.Bind<CursorService>().AsSingle().NonLazy();
         }
     }
 }
