@@ -27,12 +27,12 @@ namespace DeepSlay
             {
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    RollDice();
+                    DrawDices();
                 }
             });
         }
 
-        private void RollDice()
+        private void DrawDices()
         {
             var bag = _bagRepository.DieModels;
 
@@ -51,6 +51,19 @@ namespace DeepSlay
                 dices.Add(die);
                 _bagRepository.DiscardDeck.Add(die);
                 _bagRepository.DieModels.Remove(die);
+            }
+            
+            RollDices(dices);
+        }
+
+        private void RollDices(List<DieModel> dieModels)
+        {
+            var resultFaces = new List<Elements>();
+            
+            foreach (var dieModel in dieModels)
+            {
+                var face = dieModel.DieFaces.Random();
+                resultFaces.Add(face);
             }
         }
     }
