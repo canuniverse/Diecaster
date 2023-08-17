@@ -38,19 +38,17 @@ namespace DeepSlay
 
         private void DrawDices()
         {
-            var bag = _bagRepository.DieModels;
-
             var diceCount = 5;
             var dices = new List<DieModel>();
 
             for (var i = 0; i < diceCount; i++)
             {
-                if (bag.Count < 1)
+                if (_bagRepository.DieModels.Count < 1)
                 {
-                    return;
+                    ReshuffleDiscardDeck();
                 }
 
-                var die = bag.First();
+                var die = _bagRepository.DieModels.First();
 
                 dices.Add(die);
                 _bagRepository.DiscardDeck.Add(die);
@@ -58,6 +56,15 @@ namespace DeepSlay
             }
 
             RollDices(dices);
+        }
+
+        private void ReshuffleDiscardDeck()
+        {
+            var discardDeck = _bagRepository.DiscardDeck
+                .OrderBy(_ => UnityEngine.Random.value).ToList();
+
+            _bagRepository.DieModels.AddNew(discardDeck);
+            _bagRepository.DiscardDeck = new List<DieModel>();
         }
 
         private void RollDices(List<DieModel> dieModels)
@@ -75,6 +82,8 @@ namespace DeepSlay
 
         private void SpawnDices(List<Elements> diceFaces)
         {
+            _diceViewService.DespawnAll();
+
             for (var i = 0; i < diceFaces.Count; i++)
             {
                 var face = diceFaces[i];
