@@ -17,3 +17,4 @@ MonoBehaviour:
   CursorSelectTap: {fileID: 2800000, guid: 588430a3336714f62b22ed2aa06dfe31, type: 3}
   CursorGrab: {fileID: 2800000, guid: cb99f6bd868cf468e9d3bc262355e43c, type: 3}
   CursorGrabbing: {fileID: 2800000, guid: 3e95968a031444dc4b644300b23cc26f, type: 3}
+  CursorDiscard: {fileID: 2800000, guid: a5b59bf820562480b8d5c783e6e213f4, type: 3}

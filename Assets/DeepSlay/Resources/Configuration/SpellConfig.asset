@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d24f4aefd9f474497c42bb1f45001ff, type: 3}
+  m_Name: SpellConfig
+  m_EditorClassIdentifier: 
+  SpellModels:
+  - Name: Fireball
+    Combinations:
+    - Combination: 0100000001000000
+    IsAreaEffect: 0
+    DamageValue: 4
+    HealValue: 0
+  - Name: Steam
+    Combinations:
+    - Combination: 0100000002000000
+    - Combination: 0200000001000000
+    IsAreaEffect: 0
+    DamageValue: 2
+    HealValue: 2
+  - Name: Firestorm
+    Combinations:
+    - Combination: 0100000004000000
+    - Combination: 0400000001000000
+    IsAreaEffect: 1
+    DamageValue: 2
+    HealValue: 0
+  - Name: Heal
+    Combinations:
+    - Combination: 0200000002000000
+    IsAreaEffect: 0
+    DamageValue: 0
+    HealValue: 4

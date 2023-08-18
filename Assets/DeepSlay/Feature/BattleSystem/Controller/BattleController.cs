@@ -24,6 +24,8 @@ namespace DeepSlay.Feature.BattleSystem.Controller
         private void OnDiceSpawnCompletedSignal(DiceSpawnCompletedSignal signal)
         {
             _rolledDice = new List<Elements>(signal.RolledFaces);
+            
+            
         }
 
     }
