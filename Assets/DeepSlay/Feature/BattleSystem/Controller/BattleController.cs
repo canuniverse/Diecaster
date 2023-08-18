@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Zenject;
 
 namespace DeepSlay
@@ -51,34 +50,40 @@ namespace DeepSlay
 
         private void CheckCombinations()
         {
+            var spells = _spellConfig.SpellModels;
+            
             var views = _diceViewService.Views;
             if (views.Count < 2)
             {
                 return;
             }
 
-            var spells = _spellConfig.SpellModels;
-            for (var i = 0; i < views.Count; i++)
+            var group1 = new List<DiceView> { views[0], views[1] };
+            var group2 = views.Count > 2 ? new List<DiceView> { views[1], views[2] } : null;
+            var group3 = views.Count > 3 ? new List<DiceView> { views[2], views[3] } : null;
+            
+            var spell1 = spells.Find(spell => spell.Combinations.Any(comb =>
+                comb.Combination.SequenceEqual(group1.Select(e => e.Element).ToList())));
+            
+            var spell2 = group2 == null ? null : spells.Find(spell => spell.Combinations.Any(comb =>
+                comb.Combination.SequenceEqual(group2.Select(e => e.Element).ToList())));
+            
+            var spell3 = group3 == null ? null : spells.Find(spell => spell.Combinations.Any(comb =>
+                comb.Combination.SequenceEqual(group3.Select(e => e.Element).ToList())));
+
+            if (spell1 != null)
             {
-                var currentElement = views[i].Element;
-
-                if (i + 1 == views.Count)
-                {
-                    break;
-                }
-
-                var nextElement = views[i + 1].Element;
-                var combination = new List<Elements> { currentElement, nextElement };
-                var diceViews = new List<DiceView> { views[i], views[i + 1] };
-
-                var spell = spells.Find(spell => spell.Combinations.Any(comb =>
-                    comb.Combination.SequenceEqual(combination)));
-
-                if (spell != null)
-                {
-                    CombineElements(spell, diceViews);
-                    break;
-                }
+                CombineElements(spell1, group1);
+            }
+            
+            if (spell1 == null && spell2 != null)
+            {
+                CombineElements(spell2, group2);
+            }
+            
+            if (spell3 != null)
+            {
+                CombineElements(spell3, group3);
             }
         }
 
@@ -89,7 +94,6 @@ namespace DeepSlay
 
             var spell = _diceViewService.Spawn();
             spell.SetSpell(spellModel.Name);
-            spell.transform.position = Vector3.Lerp(viewA.transform.position, viewB.transform.position, 0.5f);
 
             _diceViewService.DeSpawn(viewA);
             _diceViewService.DeSpawn(viewB);
