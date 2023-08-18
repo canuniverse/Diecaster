@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
+using UnityEngine;
 using Zenject;
 
 namespace DeepSlay
@@ -8,16 +10,19 @@ namespace DeepSlay
     public class BattleController : IDisposable
     {
         private SignalBus _signalBus;
+        private DiceBagView _bagView;
         private SpellConfig _spellConfig;
         private DiceViewService _diceViewService;
         private BattlePhaseRepository _battlePhaseRepository;
 
         public BattleController(
             SignalBus signalBus,
+            DiceBagView bagView,
             SpellConfig spellConfig,
             DiceViewService viewService,
             BattlePhaseRepository phaseRepository)
         {
+            _bagView = bagView;
             _signalBus = signalBus;
             _spellConfig = spellConfig;
             _diceViewService = viewService;
@@ -73,30 +78,43 @@ namespace DeepSlay
 
             if (spell1 != null)
             {
-                CombineElements(spell1, group1);
+                CombineElements(spell1, group1, _bagView.SpellParents[0]);
             }
             
             if (spell1 == null && spell2 != null)
             {
-                CombineElements(spell2, group2);
+                CombineElements(spell2, group2, _bagView.SpellParents[0]);
             }
             
             if (spell3 != null)
             {
-                CombineElements(spell3, group3);
+                CombineElements(spell3, group3, _bagView.SpellParents[1]);
             }
         }
 
-        private void CombineElements(SpellModel spellModel, List<DiceView> views)
+        private void CombineElements(SpellModel spellModel, List<DiceView> views, Transform parent)
         {
             var viewA = views[0];
             var viewB = views[1];
 
-            var spell = _diceViewService.Spawn();
-            spell.SetSpell(spellModel.Name);
+            var sequence = DOTween.Sequence();
 
-            _diceViewService.DeSpawn(viewA);
-            _diceViewService.DeSpawn(viewB);
+            var position = parent.position;
+            
+            sequence.Append(viewA.transform.DOMove(position, 0.5f).SetEase(Ease.InSine));
+            sequence.Append(viewB.transform.DOMove(position, 0.5f).SetEase(Ease.InSine));
+
+            sequence.OnComplete(() =>
+            {
+                _diceViewService.DeSpawn(viewA);
+                _diceViewService.DeSpawn(viewB);
+                
+                var spell = _diceViewService.Spawn();
+                spell.SetSpell(spellModel.Name);
+            
+                spell.transform.position = position;
+                spell.transform.SetParent(parent);
+            });
         }
     }
 }

@@ -23,6 +23,7 @@ namespace DeepSlay
                 {
                     view.SetActive();
                 }
+
                 base.OnSpawned(poolView);
             }
 
@@ -32,6 +33,7 @@ namespace DeepSlay
                 {
                     view.SetInactive();
                 }
+
                 base.OnDespawned(poolView);
             }
         }

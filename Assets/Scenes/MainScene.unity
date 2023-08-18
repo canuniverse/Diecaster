@@ -180,6 +180,9 @@ MonoBehaviour:
   - {fileID: 1204591369}
   - {fileID: 1593270755}
   - {fileID: 450102615}
+  _spellParents:
+  - {fileID: 538949189}
+  - {fileID: 1593270755}
 --- !u!1 &183188223
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Zenject;
 
 namespace DeepSlay
@@ -114,6 +115,7 @@ namespace DeepSlay
                 var view = _diceViewService.Spawn();
                 var parent = _bagView.DiceParents[i];
                 view.transform.SetParent(parent, false);
+                view.transform.localPosition = Vector3.zero;
                 view.SetDieFace(face);
                 view.DiceIndex = i;
             }

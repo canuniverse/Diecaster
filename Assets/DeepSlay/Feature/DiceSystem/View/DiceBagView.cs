@@ -9,8 +9,10 @@ namespace DeepSlay
     {
         [SerializeField] private Button _bagButton;
         [SerializeField] private List<Transform> _diceParents;
+        [SerializeField] private List<Transform> _spellParents;
 
         public List<Transform> DiceParents => _diceParents;
+        public List<Transform> SpellParents => _spellParents;
 
         private SignalBus _signalBus;
 
