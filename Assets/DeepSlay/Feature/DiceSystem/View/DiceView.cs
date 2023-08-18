@@ -15,6 +15,7 @@ namespace DeepSlay
         [SerializeField] private TMP_Text _diceName;
 
         public int DiceIndex { get; set; }
+        public Elements Element { get; set; }
 
         private SignalBus _signalBus;
         private BattlePhaseRepository _phaseRepository;
@@ -50,6 +51,8 @@ namespace DeepSlay
             {
                 _diceName.SetText($"{element}");
             });
+
+            Element = element;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
