@@ -26,6 +26,15 @@ namespace DeepSlay
         {
             var copyCount = 2;
             var dieModels = _diceConfig.DieModels;
+            
+            //manipulated deck
+            var fireDie = dieModels.Find(die => die.DieFaces.Contains(Elements.Fire));
+
+            dieModels = new List<DieModel>
+            {
+                fireDie, fireDie, fireDie, fireDie
+            };
+            
             var bag = new List<DieModel>();
 
             foreach (var dieModel in dieModels)
