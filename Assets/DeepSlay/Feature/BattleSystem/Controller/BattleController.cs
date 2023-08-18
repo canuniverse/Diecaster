@@ -10,7 +10,6 @@ namespace DeepSlay
     {
         private SignalBus _signalBus;
         private SpellConfig _spellConfig;
-        private List<Elements> _rolledDice;
         private DiceViewService _diceViewService;
         private BattlePhaseRepository _battlePhaseRepository;
 
@@ -34,8 +33,6 @@ namespace DeepSlay
 
         private void OnDiceSpawnCompletedSignal(DiceSpawnCompletedSignal signal)
         {
-            _rolledDice = new List<Elements>(signal.RolledFaces);
-
             RefineRolledList();
             CheckCombinations();
         }
@@ -50,39 +47,52 @@ namespace DeepSlay
             {
                 _diceViewService.DeSpawn(view);
             }
-
-            _rolledDice.RemoveAll(view => view == Elements.None);
         }
 
         private void CheckCombinations()
         {
-            if (_rolledDice.Count < 2)
+            var views = _diceViewService.Views;
+            if (views.Count < 2)
             {
                 return;
             }
 
             var spells = _spellConfig.SpellModels;
-            for (var i = 0; i < _rolledDice.Count; i++)
+            for (var i = 0; i < views.Count; i++)
             {
-                var currentElement = _rolledDice[i];
+                var currentElement = views[i].Element;
 
-                if (i + 1 == _rolledDice.Count)
+                if (i + 1 == views.Count)
                 {
                     break;
                 }
 
-                var nextElement = _rolledDice[i + 1];
+                var nextElement = views[i + 1].Element;
                 var combination = new List<Elements> { currentElement, nextElement };
-                
-                var spell = spells.Find(spell => spell.Combinations.Any(comb => 
+                var diceViews = new List<DiceView> { views[i], views[i + 1] };
+
+                var spell = spells.Find(spell => spell.Combinations.Any(comb =>
                     comb.Combination.SequenceEqual(combination)));
 
                 if (spell != null)
                 {
-                    Debug.Log(spell.Name);
+                    CombineElements(spell, diceViews);
                     break;
                 }
             }
+        }
+
+        private void CombineElements(SpellModel spellModel, List<DiceView> views)
+        {
+            var viewA = views[0];
+            var viewB = views[1];
+
+            var spell = _diceViewService.Spawn();
+            spell.SetSpell(spellModel.Name);
+            spell.transform.position = Vector3.Lerp(viewA.transform.position, viewB.transform.position, 0.5f);
+
+            _diceViewService.DeSpawn(viewA);
+            _diceViewService.DeSpawn(viewB);
         }
     }
 }

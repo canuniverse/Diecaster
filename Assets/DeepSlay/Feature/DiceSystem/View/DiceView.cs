@@ -16,6 +16,7 @@ namespace DeepSlay
 
         public int DiceIndex { get; set; }
         public Elements Element { get; set; }
+        public string Spell { get; set; }
 
         private SignalBus _signalBus;
         private BattlePhaseRepository _phaseRepository;
@@ -27,6 +28,12 @@ namespace DeepSlay
         {
             _signalBus = signalBus;
             _phaseRepository = phaseRepository;
+        }
+
+        public void SetSpell(string spell)
+        {
+            Spell = spell;
+            _diceName.SetText($"{spell}");
         }
 
         public void SetDieFace(Elements element)
