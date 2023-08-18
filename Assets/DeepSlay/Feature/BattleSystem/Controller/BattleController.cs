@@ -110,7 +110,7 @@ namespace DeepSlay
                 _diceViewService.DeSpawn(viewB);
                 
                 var spell = _diceViewService.Spawn();
-                spell.SetSpell(spellModel.Name);
+                spell.SetSpell(spellModel);
             
                 spell.transform.position = position;
                 spell.transform.SetParent(parent);
