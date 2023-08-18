@@ -3,14 +3,26 @@ using System.Linq;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 namespace DeepSlay
 {
-    public class DiceView : PoolView<DiceView>
+    public class DiceView : PoolView<DiceView>, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         [SerializeField] private Image _iconImage;
         [SerializeField] private TMP_Text _diceName;
+
+        public int DiceIndex { get; set; }
+
+        private SignalBus _signalBus;
+        
+        [Inject]
+        private void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+        }
 
         public void SetDieFace(Elements element)
         {
@@ -34,6 +46,21 @@ namespace DeepSlay
             {
                 _diceName.SetText($"{element}");
             });
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            CursorService.SetCursor(CursorType.CursorDiscard);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            CursorService.SetCursor(CursorType.CursorDefault);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            _signalBus.Fire(new DiscardDiceSignal{ DieIndex = DiceIndex });
         }
     }
 }

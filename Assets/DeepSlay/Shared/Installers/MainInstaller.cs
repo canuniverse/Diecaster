@@ -22,6 +22,7 @@ namespace DeepSlay
             Container.Bind<DiceViewService>().AsSingle();
 
             Container.Bind<BagRepository>().AsSingle();
+            Container.Bind<DiceFaceRepository>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<BagController>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<DiceController>().AsSingle().NonLazy();

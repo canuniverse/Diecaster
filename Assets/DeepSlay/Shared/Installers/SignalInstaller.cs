@@ -8,6 +8,7 @@ namespace DeepSlay
         {
             SignalBusInstaller.Install(Container);
 
+            Container.DeclareSignal<DiscardDiceSignal>();
             Container.DeclareSignal<DiceBagClickedSignal>();
             Container.DeclareSignal<DiceSpawnCompletedSignal>();
         }

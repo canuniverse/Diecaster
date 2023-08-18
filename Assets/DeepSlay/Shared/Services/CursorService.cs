@@ -32,6 +32,10 @@ namespace DeepSlay
                     var grabbingCursor = _cursorConfig.CursorGrabbing;
                     SetCursor(grabbingCursor, new Vector2(grabbingCursor.width / 2f, grabbingCursor.height / 2f));
                     break;
+                case CursorType.CursorDiscard:
+                    var cursorDiscard = _cursorConfig.CursorDiscard;
+                    SetCursor(cursorDiscard, new Vector2(cursorDiscard.width / 2f, cursorDiscard.height / 2f));
+                    break;
             }
         }
 
@@ -48,5 +52,6 @@ namespace DeepSlay
         CursorSelectTap,
         CursorGrab,
         CursorGrabbing,
+        CursorDiscard,
     }
 }

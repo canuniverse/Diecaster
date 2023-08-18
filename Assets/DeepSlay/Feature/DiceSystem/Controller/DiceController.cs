@@ -11,29 +11,45 @@ namespace DeepSlay
         private DiceBagView _bagView;
         private BagRepository _bagRepository;
         private DiceViewService _diceViewService;
+        private DiceFaceRepository _diceFaceRepository;
 
         public DiceController(
             SignalBus signalBus,
             DiceBagView diceBagView,
             DiceViewService diceViewService,
+            DiceFaceRepository diceFaceRepository,
             BagRepository bagRepository)
         {
             _signalBus = signalBus;
             _bagView = diceBagView;
             _bagRepository = bagRepository;
             _diceViewService = diceViewService;
+            _diceFaceRepository = diceFaceRepository;
 
+            _signalBus.Subscribe<DiscardDiceSignal>(OnDiceDiscarded);
             _signalBus.Subscribe<DiceBagClickedSignal>(OnDiceBagClicked);
         }
 
         public void Dispose()
         {
+            _signalBus.Unsubscribe<DiscardDiceSignal>(OnDiceDiscarded);
             _signalBus.Unsubscribe<DiceBagClickedSignal>(OnDiceBagClicked);
         }
 
         private void OnDiceBagClicked(DiceBagClickedSignal signal)
         {
             DrawDices();
+        }
+
+        private void OnDiceDiscarded(DiscardDiceSignal signal)
+        {
+            _diceFaceRepository.ElementsList.RemoveAt(signal.DieIndex);
+            _diceViewService.DeSpawn(_diceViewService.Views[signal.DieIndex]);
+
+            _signalBus.Fire(new DiceSpawnCompletedSignal()
+            {
+                RolledFaces = _diceFaceRepository.ElementsList
+            });
         }
 
         private void DrawDices()
@@ -76,6 +92,8 @@ namespace DeepSlay
                 resultFaces.Add(face);
             }
 
+            _diceFaceRepository.ElementsList = resultFaces;
+
             SpawnDices(resultFaces);
         }
 
@@ -90,12 +108,8 @@ namespace DeepSlay
                 var parent = _bagView.DiceParents[i];
                 view.transform.SetParent(parent, false);
                 view.SetDieFace(face);
+                view.DiceIndex = i;
             }
-            
-            _signalBus.Fire(new DiceSpawnCompletedSignal()
-            {
-                RolledFaces = diceFaces
-            });
         }
     }
 }
