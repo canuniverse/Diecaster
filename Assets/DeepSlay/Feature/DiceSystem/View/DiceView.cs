@@ -17,11 +17,15 @@ namespace DeepSlay
         public int DiceIndex { get; set; }
 
         private SignalBus _signalBus;
+        private BattlePhaseRepository _phaseRepository;
         
         [Inject]
-        private void Construct(SignalBus signalBus)
+        private void Construct(
+            SignalBus signalBus,
+            BattlePhaseRepository phaseRepository)
         {
             _signalBus = signalBus;
+            _phaseRepository = phaseRepository;
         }
 
         public void SetDieFace(Elements element)
@@ -50,7 +54,10 @@ namespace DeepSlay
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            CursorService.SetCursor(CursorType.CursorDiscard);
+            if (_phaseRepository.BattlePhase == BattlePhase.Discard)
+            {
+                CursorService.SetCursor(CursorType.CursorDiscard);
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -60,6 +67,12 @@ namespace DeepSlay
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (_phaseRepository.BattlePhase != BattlePhase.Discard)
+            {
+                return;
+            }
+            
+            CursorService.SetCursor(CursorType.CursorDefault);
             _signalBus.Fire(new DiscardDiceSignal{ DieIndex = DiceIndex });
         }
     }

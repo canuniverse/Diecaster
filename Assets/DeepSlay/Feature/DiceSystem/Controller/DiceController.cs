@@ -12,12 +12,14 @@ namespace DeepSlay
         private BagRepository _bagRepository;
         private DiceViewService _diceViewService;
         private DiceFaceRepository _diceFaceRepository;
+        private BattlePhaseRepository _battlePhaseRepository;
 
         public DiceController(
             SignalBus signalBus,
             DiceBagView diceBagView,
             DiceViewService diceViewService,
             DiceFaceRepository diceFaceRepository,
+            BattlePhaseRepository battlePhaseRepository,
             BagRepository bagRepository)
         {
             _signalBus = signalBus;
@@ -25,6 +27,7 @@ namespace DeepSlay
             _bagRepository = bagRepository;
             _diceViewService = diceViewService;
             _diceFaceRepository = diceFaceRepository;
+            _battlePhaseRepository = battlePhaseRepository;
 
             _signalBus.Subscribe<DiscardDiceSignal>(OnDiceDiscarded);
             _signalBus.Subscribe<DiceBagClickedSignal>(OnDiceBagClicked);
@@ -71,6 +74,8 @@ namespace DeepSlay
                 _bagRepository.DieModels.Remove(die);
             }
 
+            _battlePhaseRepository.BattlePhase = BattlePhase.Draw;
+            
             RollDices(dices);
         }
 
@@ -94,6 +99,8 @@ namespace DeepSlay
 
             _diceFaceRepository.ElementsList = resultFaces;
 
+            _battlePhaseRepository.BattlePhase = BattlePhase.Roll;
+            
             SpawnDices(resultFaces);
         }
 
@@ -110,6 +117,8 @@ namespace DeepSlay
                 view.SetDieFace(face);
                 view.DiceIndex = i;
             }
+            
+            _battlePhaseRepository.BattlePhase = BattlePhase.Discard;
         }
     }
 }
