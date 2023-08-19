@@ -1,0 +1,58 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'build/**'
+
+jobs:
+
+  buildForAllSupportedPlatforms:
+    name: Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        unityVersion:
+          - 2022.2.5f1
+        versioning:
+          - None
+        targetPlatform:
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          # - StandaloneLinux64 # Build a Linux 64-bit standalone.
+    
+    outputs:
+      buildVersion: ${{ steps.build.outputs.buildVersion }}
+    
+    steps:
+      - uses: actions/checkout@v3.3.0
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - uses: actions/cache@v3.2.3
+        with:
+          path: Library
+          key:
+            Library-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**',
+            'ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-
+            Library-
+
+      - uses: game-ci/unity-builder@v2.1.2
+        id: build
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          buildName: "Diecaster"
+          targetPlatform: ${{ matrix.targetPlatform }}
+          versioning: ${{ matrix.versioning }}
+          unityVersion: ${{ matrix.unityVersion }}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
