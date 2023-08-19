@@ -14,6 +14,7 @@ namespace DeepSlay
         private DiceBagView _bagView;
         private SpellConfig _spellConfig;
         private DiceViewService _diceViewService;
+        private EnemyController _enemyController;
         private BattlePhaseRepository _battlePhaseRepository;
 
         public BattleController(
@@ -21,12 +22,14 @@ namespace DeepSlay
             DiceBagView bagView,
             SpellConfig spellConfig,
             DiceViewService viewService,
+            EnemyController enemyController,
             BattlePhaseRepository phaseRepository)
         {
             _bagView = bagView;
             _signalBus = signalBus;
             _spellConfig = spellConfig;
             _diceViewService = viewService;
+            _enemyController = enemyController;
             _battlePhaseRepository = phaseRepository;
 
             _signalBus.Subscribe<SpellSelectedSignal>(OnSpellSelected);
@@ -73,6 +76,7 @@ namespace DeepSlay
             var views = _diceViewService.Views;
             if (views.Count < 2)
             {
+                _enemyController.EnemyAttacks();
                 return;
             }
 

@@ -1,17 +1,21 @@
 using System;
+using System.Linq;
 using UniRx;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace DeepSlay
 {
     public class EnemyController : IDisposable
     {
         private SignalBus _signalBus;
+        private PlayerView _playerView;
         private LevelConfig _levelConfig;
         private EnemyConfig _enemyConfig;
         private SpellConfig _spellConfig;
         private EnemyAreaView _enemyAreaView;
         private DiceViewService _diceViewService;
+        private BattlePhaseRepository _battlePhaseRepository;
 
         private DiceView _spellView;
 
@@ -20,15 +24,19 @@ namespace DeepSlay
             LevelConfig levelConfig,
             EnemyConfig enemyConfig,
             SpellConfig spellConfig,
+            PlayerView playerView,
             DiceViewService diceViewService,
+            BattlePhaseRepository battlePhaseRepository,
             EnemyAreaView enemyAreaView)
         {
             _signalBus = signalBus;
+            _playerView = playerView;
             _spellConfig = spellConfig;
             _levelConfig = levelConfig;
             _enemyConfig = enemyConfig;
             _enemyAreaView = enemyAreaView;
             _diceViewService = diceViewService;
+            _battlePhaseRepository = battlePhaseRepository;
 
             _signalBus.Subscribe<EnemySelectedSignal>(OnEnemySelected);
             _signalBus.Subscribe<SpellSelectedSignal>(OnSpellSelected);
@@ -68,6 +76,45 @@ namespace DeepSlay
 
             _diceViewService.DeSpawn(_spellView);
             _spellView = null;
+
+            var diceViews = _diceViewService.Views;
+            var spells = diceViews.FindAll(view => !string.IsNullOrEmpty(view.Spell));
+            if (spells.Count < 1)
+            {
+                EnemyAttacks();
+            }
+        }
+
+        public void EnemyAttacks()
+        {
+            var attackDelay = 0.5f;
+
+            var views = _enemyAreaView.EnemyViews
+                .Where(view => view.gameObject.activeSelf && view.EnemyModel != null).ToList();
+
+            foreach (var enemy in views)
+            {
+                var model = enemy.EnemyModel;
+                var damage = Random.Range(model.BasicAttackMin, model.BasicAttackMax);
+
+                Observable.Timer(TimeSpan.FromSeconds(attackDelay)).Subscribe(_ =>
+                {
+                    _playerView.HP -= damage;
+                    _playerView.ShowHp(damage);
+                });
+
+                if (_playerView.HP <= 0)
+                {
+                    // die
+                }
+
+                attackDelay += 0.5f;
+            }
+
+            Observable.Timer(TimeSpan.FromSeconds(attackDelay)).Subscribe(_ =>
+            {
+                _battlePhaseRepository.BattlePhase = BattlePhase.Draw;
+            });
         }
 
         private void PickEnemies()
