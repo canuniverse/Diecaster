@@ -54,7 +54,7 @@ namespace DeepSlay
             view.Disappear(onComplete: () =>
             {
                 _diceViewService.DeSpawn(view);
-                
+
                 _signalBus.Fire(new DiceSpawnCompletedSignal()
                 {
                     RolledFaces = _diceFaceRepository.ElementsList
@@ -120,6 +120,7 @@ namespace DeepSlay
                 var face = diceFaces[i];
                 var view = _diceViewService.Spawn();
                 var parent = _bagView.DiceParents[i];
+                view.Parent = parent;
                 view.transform.SetParent(parent, false);
                 view.transform.localPosition = Vector3.zero;
                 view.SetDieFace(face);

@@ -1,14 +1,12 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zenject;
 
 namespace DeepSlay
 {
-    public class EnemyView : PoolView<EnemyView>, IPointerEnterHandler,
-        IPointerExitHandler, IPointerClickHandler
+    public class EnemyView : PoolView<EnemyView>
     {
         [SerializeField] private Image _iconImage;
         [SerializeField] private Image _hpBar;
@@ -112,27 +110,6 @@ namespace DeepSlay
             Sequence.Append(DOVirtual.DelayedCall(0.5f, () => ShowIcon($"{EnemyModel.Element}-2")));
             Sequence.SetLoops(-1);
             Sequence.Play();
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            if (_phaseRepository.BattlePhase == BattlePhase.SelectTarget)
-            {
-                CursorService.SetCursor(CursorType.CursorAttack);
-            }
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            CursorService.SetCursor(CursorType.CursorDefault);
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (_phaseRepository.BattlePhase == BattlePhase.SelectTarget)
-            {
-                _signalBus.Fire(new EnemySelectedSignal { EnemyView = this });
-            }
         }
     }
 }

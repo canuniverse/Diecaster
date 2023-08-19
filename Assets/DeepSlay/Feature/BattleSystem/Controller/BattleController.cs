@@ -41,7 +41,7 @@ namespace DeepSlay
 
         private void OnSpellSelected(SpellSelectedSignal signal)
         {
-            _battlePhaseRepository.BattlePhase = BattlePhase.SelectTarget;
+            _battlePhaseRepository.BattlePhase = BattlePhase.Attack;
         }
 
         private void OnDiceSpawnCompletedSignal(DiceSpawnCompletedSignal signal)
@@ -137,10 +137,9 @@ namespace DeepSlay
                 var spell = _diceViewService.Spawn();
                 spell.SetSpell(spellModel);
 
+                spell.Parent = parent;
                 spell.transform.position = position;
                 spell.transform.SetParent(parent);
-
-                _battlePhaseRepository.BattlePhase = BattlePhase.SelectSpell;
             });
         }
     }

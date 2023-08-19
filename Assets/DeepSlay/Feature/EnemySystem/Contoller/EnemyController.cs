@@ -11,14 +11,16 @@ namespace DeepSlay
         private EnemyConfig _enemyConfig;
         private SpellConfig _spellConfig;
         private EnemyAreaView _enemyAreaView;
+        private DiceViewService _diceViewService;
 
-        private SpellModel _spellModel;
+        private DiceView _spellView;
 
         public EnemyController(
             SignalBus signalBus,
             LevelConfig levelConfig,
             EnemyConfig enemyConfig,
             SpellConfig spellConfig,
+            DiceViewService diceViewService,
             EnemyAreaView enemyAreaView)
         {
             _signalBus = signalBus;
@@ -26,6 +28,7 @@ namespace DeepSlay
             _levelConfig = levelConfig;
             _enemyConfig = enemyConfig;
             _enemyAreaView = enemyAreaView;
+            _diceViewService = diceViewService;
 
             _signalBus.Subscribe<EnemySelectedSignal>(OnEnemySelected);
             _signalBus.Subscribe<SpellSelectedSignal>(OnSpellSelected);
@@ -41,25 +44,30 @@ namespace DeepSlay
 
         private void OnSpellSelected(SpellSelectedSignal signal)
         {
-            _spellModel = _spellConfig.Get(signal.SpellName);
+            _spellView = signal.DiceView;
         }
 
         private void OnEnemySelected(EnemySelectedSignal signal)
         {
-            if (_spellModel == null)
+            if (_spellView == null)
             {
                 return;
             }
 
+            var spellModel = _spellConfig.Get(_spellView.Spell);
+
             var enemy = signal.EnemyView;
 
-            enemy.EnemyModel.HP -= _spellModel.DamageValue;
-            enemy.ShowHp(_spellModel.DamageValue);
+            enemy.EnemyModel.HP -= spellModel.DamageValue;
+            enemy.ShowHp(spellModel.DamageValue);
 
             if (enemy.EnemyModel.HP <= 0)
             {
                 enemy.Die();
             }
+
+            _diceViewService.DeSpawn(_spellView);
+            _spellView = null;
         }
 
         private void PickEnemies()
