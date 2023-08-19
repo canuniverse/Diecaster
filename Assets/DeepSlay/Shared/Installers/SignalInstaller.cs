@@ -10,6 +10,7 @@ namespace DeepSlay
 
             Container.DeclareSignal<DiscardDiceSignal>();
             Container.DeclareSignal<SpellSelectedSignal>();
+            Container.DeclareSignal<EnemySelectedSignal>();
             Container.DeclareSignal<DiceBagClickedSignal>();
             Container.DeclareSignal<DiceSpawnCompletedSignal>();
         }

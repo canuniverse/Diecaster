@@ -7,5 +7,10 @@ namespace DeepSlay
     public class SpellConfig : ScriptableObject
     {
         public List<SpellModel> SpellModels;
+
+        public SpellModel Get(string spellName)
+        {
+            return SpellModels.Find(model => model.Name == spellName);
+        }
     }
 }

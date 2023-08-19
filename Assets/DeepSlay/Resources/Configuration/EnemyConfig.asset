@@ -15,17 +15,21 @@ MonoBehaviour:
   EnemyModels:
   - Element: 1
     HP: 10
+    MaxHP: 10
     BasicAttackMin: 5
     BasicAttackMax: 10
   - Element: 2
     HP: 10
+    MaxHP: 10
     BasicAttackMin: 2
     BasicAttackMax: 5
   - Element: 3
     HP: 20
+    MaxHP: 20
     BasicAttackMin: 4
     BasicAttackMax: 6
   - Element: 4
     HP: 10
+    MaxHP: 10
     BasicAttackMin: 2
     BasicAttackMax: 5
