@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd181513f8974500b7a6f73d1c1ef560, type: 3}
   m_Name: LevelConfig
   m_EditorClassIdentifier: 
+  Level: 0
   LevelModels:
   - Enemies: 0100000004000000
   - Enemies: 0300000002000000

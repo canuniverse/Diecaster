@@ -72,7 +72,7 @@ namespace DeepSlay
 
         private void PickEnemies()
         {
-            var currentLevel = _levelConfig.LevelModels[0];
+            var currentLevel = _levelConfig.LevelModels[_levelConfig.Level];
 
             for (var i = 0; i < currentLevel.Enemies.Count; i++)
             {

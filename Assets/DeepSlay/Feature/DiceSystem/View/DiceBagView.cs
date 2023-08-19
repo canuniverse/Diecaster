@@ -15,11 +15,15 @@ namespace DeepSlay
         public List<Transform> SpellParents => _spellParents;
 
         private SignalBus _signalBus;
+        private BattlePhaseRepository _battlePhaseRepository;
 
         [Inject]
-        private void Construct(SignalBus signalBus)
+        private void Construct(
+            SignalBus signalBus,
+            BattlePhaseRepository phaseRepository)
         {
             _signalBus = signalBus;
+            _battlePhaseRepository = phaseRepository;
         }
 
         private void OnEnable()
@@ -34,7 +38,10 @@ namespace DeepSlay
 
         private void OnBagButtonClicked()
         {
-            _signalBus.Fire(new DiceBagClickedSignal());
+            if (_battlePhaseRepository.BattlePhase == BattlePhase.Draw)
+            {
+                _signalBus.Fire(new DiceBagClickedSignal());
+            }
         }
     }
 }

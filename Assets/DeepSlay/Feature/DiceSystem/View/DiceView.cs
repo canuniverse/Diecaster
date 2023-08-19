@@ -71,16 +71,16 @@ namespace DeepSlay
                 var isIntersected = RectTransformUtility.RectangleContainsScreenPoint(transform as RectTransform,
                     ((RectTransform)enemyView.transform).position);
 
-                if (isIntersected)
+                if (!isIntersected)
                 {
-                    _signalBus.Fire(new SpellSelectedSignal { DiceView = this });
-                    _signalBus.Fire(new EnemySelectedSignal { EnemyView = enemyView });
+                    continue;
                 }
-                else
-                {
-                    transform.position = Parent.position;
-                }
+                
+                _signalBus.Fire(new SpellSelectedSignal { DiceView = this });
+                _signalBus.Fire(new EnemySelectedSignal { EnemyView = enemyView });
             }
+            
+            transform.position = Parent.position;
         }
 
         private void OnDragBegan(PointerEventData eventData)
@@ -128,7 +128,6 @@ namespace DeepSlay
         public void SetDieFace(Elements element)
         {
             var dieNames = Enum.GetNames(typeof(Elements)).ToList();
-
 
             dieNames = dieNames.Randomize();
 

@@ -30,6 +30,8 @@ namespace DeepSlay
             _diceFaceRepository = diceFaceRepository;
             _battlePhaseRepository = battlePhaseRepository;
 
+            _battlePhaseRepository.BattlePhase = BattlePhase.Draw;
+            
             _signalBus.Subscribe<DiscardDiceSignal>(OnDiceDiscarded);
             _signalBus.Subscribe<DiceBagClickedSignal>(OnDiceBagClicked);
         }
@@ -80,9 +82,7 @@ namespace DeepSlay
                 _bagRepository.DiscardDeck.Add(die);
                 _bagRepository.DieModels.Remove(die);
             }
-
-            _battlePhaseRepository.BattlePhase = BattlePhase.Draw;
-
+            
             RollDices(dices);
         }
 
