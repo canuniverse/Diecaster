@@ -29,10 +29,15 @@ namespace DeepSlay
             
             //manipulated deck
             var fireDie = dieModels.Find(die => die.DieFaces.Contains(Elements.Fire));
+            var waterDie = dieModels.Find(die => die.DieFaces.Contains(Elements.Water));
+            var earthDie = dieModels.Find(die => die.DieFaces.Contains(Elements.Earth));
+            var airDie = dieModels.Find(die => die.DieFaces.Contains(Elements.Air));
+
+
 
             dieModels = new List<DieModel>
             {
-                fireDie, fireDie, fireDie, fireDie
+                fireDie, fireDie, waterDie, waterDie
             };
             
             var bag = new List<DieModel>();
