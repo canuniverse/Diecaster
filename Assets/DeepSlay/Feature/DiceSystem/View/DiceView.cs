@@ -19,13 +19,13 @@ namespace DeepSlay
         public string Spell { get; set; }
 
         private SignalBus _signalBus;
-        private SpriteAtlasConfig _atlasConfig;
+        private AtlasConfig _atlasConfig;
         private BattlePhaseRepository _phaseRepository;
         
         [Inject]
         private void Construct(
             SignalBus signalBus,
-            SpriteAtlasConfig atlasConfig,
+            AtlasConfig atlasConfig,
             BattlePhaseRepository phaseRepository)
         {
             _signalBus = signalBus;

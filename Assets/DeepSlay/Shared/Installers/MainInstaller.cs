@@ -26,6 +26,7 @@ namespace DeepSlay
 
             Container.BindInterfacesAndSelfTo<BagController>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<DiceController>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<EnemyController>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<BattleController>().AsSingle().NonLazy();
         }
     }
