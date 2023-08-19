@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -46,7 +47,6 @@ namespace DeepSlay
         private void OnDiceSpawnCompletedSignal(DiceSpawnCompletedSignal signal)
         {
             RefineRolledList();
-            CheckCombinations();
         }
 
         private void RefineRolledList()
@@ -57,8 +57,13 @@ namespace DeepSlay
 
             foreach (var view in noneViews)
             {
-                _diceViewService.DeSpawn(view);
+                view.Disappear(onComplete: () => { _diceViewService.DeSpawn(view); });
             }
+
+            Observable.Timer(TimeSpan.FromSeconds(noneViews.Count * 0.5f)).Subscribe(_ =>
+            {
+                CheckCombinations();
+            });
         }
 
         private void CheckCombinations()
@@ -74,19 +79,22 @@ namespace DeepSlay
             var group1 = new List<DiceView> { views[0], views[1] };
             var group2 = views.Count > 2 ? new List<DiceView> { views[1], views[2] } : null;
             var group3 = views.Count > 3 ? new List<DiceView> { views[2], views[3] } : null;
+            var group4 = views.Count > 3 ? new List<DiceView> { views[0], views[3] } : null;
 
             var spell1 = spells.Find(spell => spell.Combinations.Any(comb =>
                 comb.Combination.SequenceEqual(group1.Select(e => e.Element).ToList())));
 
             var spell2 = group2 == null
-                ? null
-                : spells.Find(spell => spell.Combinations.Any(comb =>
+                ? null : spells.Find(spell => spell.Combinations.Any(comb =>
                     comb.Combination.SequenceEqual(group2.Select(e => e.Element).ToList())));
 
             var spell3 = group3 == null
-                ? null
-                : spells.Find(spell => spell.Combinations.Any(comb =>
+                ? null : spells.Find(spell => spell.Combinations.Any(comb =>
                     comb.Combination.SequenceEqual(group3.Select(e => e.Element).ToList())));
+            
+            var spell4 = group4 == null
+                ? null : spells.Find(spell => spell.Combinations.Any(comb =>
+                    comb.Combination.SequenceEqual(group4.Select(e => e.Element).ToList())));
 
             if (spell1 != null)
             {
@@ -102,6 +110,11 @@ namespace DeepSlay
             {
                 CombineElements(spell3, group3, _bagView.SpellParents[1]);
             }
+            
+            if (spell1 == null && spell2 == null && spell3 == null && spell4 != null)
+            {
+                CombineElements(spell4, group4, _bagView.SpellParents[0]);
+            }
         }
 
         private void CombineElements(SpellModel spellModel, List<DiceView> views, Transform parent)
@@ -113,8 +126,8 @@ namespace DeepSlay
 
             var position = parent.position;
 
-            sequence.Append(viewA.transform.DOMove(position, 0.5f).SetEase(Ease.InSine));
-            sequence.Append(viewB.transform.DOMove(position, 0.5f).SetEase(Ease.InSine));
+            sequence.Append(viewA.transform.DOMove(position, 0.25f).SetEase(Ease.InSine));
+            sequence.Append(viewB.transform.DOMove(position, 0.25f).SetEase(Ease.InSine));
 
             sequence.OnComplete(() =>
             {

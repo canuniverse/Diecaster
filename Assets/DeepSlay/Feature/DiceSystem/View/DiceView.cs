@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -36,6 +37,8 @@ namespace DeepSlay
 
         protected override void SetActive()
         {
+            transform.DOScale(1, 0);
+            
             Spell = string.Empty;
             _iconImage.gameObject.SetActive(false);
             _spellIcons.ForEach(view => view.gameObject.SetActive(false));
@@ -131,6 +134,14 @@ namespace DeepSlay
             {
                 CursorService.SetCursor(CursorType.CursorSelectTap);
             }
+        }
+
+        public void Disappear(Action onComplete = null)
+        {
+            transform.DOScale(0, 0.5f).OnComplete(() =>
+            {
+                onComplete?.Invoke();
+            });
         }
     }
 }

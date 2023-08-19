@@ -48,11 +48,17 @@ namespace DeepSlay
         private void OnDiceDiscarded(DiscardDiceSignal signal)
         {
             _diceFaceRepository.ElementsList.RemoveAt(signal.DieIndex);
-            _diceViewService.DeSpawn(_diceViewService.Views[signal.DieIndex]);
 
-            _signalBus.Fire(new DiceSpawnCompletedSignal()
+            var view = _diceViewService.Views[signal.DieIndex];
+
+            view.Disappear(onComplete: () =>
             {
-                RolledFaces = _diceFaceRepository.ElementsList
+                _diceViewService.DeSpawn(view);
+                
+                _signalBus.Fire(new DiceSpawnCompletedSignal()
+                {
+                    RolledFaces = _diceFaceRepository.ElementsList
+                });
             });
         }
 
@@ -76,7 +82,7 @@ namespace DeepSlay
             }
 
             _battlePhaseRepository.BattlePhase = BattlePhase.Draw;
-            
+
             RollDices(dices);
         }
 
@@ -101,7 +107,7 @@ namespace DeepSlay
             _diceFaceRepository.ElementsList = resultFaces;
 
             _battlePhaseRepository.BattlePhase = BattlePhase.Roll;
-            
+
             SpawnDices(resultFaces);
         }
 
@@ -119,7 +125,7 @@ namespace DeepSlay
                 view.SetDieFace(face);
                 view.DiceIndex = i;
             }
-            
+
             _battlePhaseRepository.BattlePhase = BattlePhase.Discard;
         }
     }
