@@ -78,6 +78,10 @@ namespace DeepSlay
             {
                 enemy.EnemyModel.HP -= spellModel.DamageValue;
                 enemy.ShowHp(spellModel.DamageValue);
+                if (enemy.EnemyModel.HP <= 0)
+                {
+                    enemy.Die();
+                }
             }
             else
             {
@@ -86,8 +90,12 @@ namespace DeepSlay
                 {
                     enemyView.EnemyModel.HP -= spellModel.DamageValue;
                     enemyView.ShowHp(spellModel.DamageValue);
+                    
+                    if (enemyView.EnemyModel.HP <= 0)
+                    {
+                        enemyView.Die();
+                    }
                 }
-
             }
             
             if (spellModel.HealValue > 0)
