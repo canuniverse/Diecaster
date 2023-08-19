@@ -54,7 +54,7 @@ namespace DeepSlay
             var enemy = signal.EnemyView;
 
             enemy.EnemyModel.HP -= _spellModel.DamageValue;
-            enemy.ShowHp();
+            enemy.ShowHp(_spellModel.DamageValue);
 
             if (enemy.EnemyModel.HP <= 0)
             {
