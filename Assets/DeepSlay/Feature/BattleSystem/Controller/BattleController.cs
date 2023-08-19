@@ -114,6 +114,8 @@ namespace DeepSlay
             
                 spell.transform.position = position;
                 spell.transform.SetParent(parent);
+                
+                _battlePhaseRepository.BattlePhase = BattlePhase.SelectSpell;
             });
         }
     }

@@ -12,6 +12,7 @@ namespace DeepSlay
         Roll,
         Discard,
         Merge,
-        Attack,
+        SelectSpell,
+        SelectTarget,
     }
 }

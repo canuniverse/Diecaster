@@ -9,7 +9,8 @@ using Zenject;
 
 namespace DeepSlay
 {
-    public class DiceView : PoolView<DiceView>, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+    public class DiceView : PoolView<DiceView>, IPointerEnterHandler, 
+        IPointerExitHandler, IPointerClickHandler, IPointerUpHandler, IPointerDownHandler
     {
         [SerializeField] private Image _iconImage;
         [SerializeField] private List<Image> _spellIcons;
@@ -35,6 +36,7 @@ namespace DeepSlay
 
         protected override void SetActive()
         {
+            Spell = string.Empty;
             _iconImage.gameObject.SetActive(false);
             _spellIcons.ForEach(view => view.gameObject.SetActive(false));
             
@@ -93,6 +95,11 @@ namespace DeepSlay
             {
                 CursorService.SetCursor(CursorType.CursorDiscard);
             }
+            else if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell 
+                     && !string.IsNullOrEmpty(Spell))
+            {
+                CursorService.SetCursor(CursorType.CursorSelect);
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -102,13 +109,29 @@ namespace DeepSlay
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (_phaseRepository.BattlePhase != BattlePhase.Discard)
+            if (_phaseRepository.BattlePhase == BattlePhase.Discard)
             {
-                return;
+                CursorService.SetCursor(CursorType.CursorDefault);
+                _signalBus.Fire(new DiscardDiceSignal{ DieIndex = DiceIndex });
             }
-            
-            CursorService.SetCursor(CursorType.CursorDefault);
-            _signalBus.Fire(new DiscardDiceSignal{ DieIndex = DiceIndex });
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell 
+                && !string.IsNullOrEmpty(Spell))
+            {
+                CursorService.SetCursor(CursorType.CursorSelect);
+            }
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell 
+                && !string.IsNullOrEmpty(Spell))
+            {
+                CursorService.SetCursor(CursorType.CursorSelectTap);
+            }
         }
     }
 }
