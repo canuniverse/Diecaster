@@ -72,7 +72,7 @@ namespace DeepSlay
             enemy.EnemyModel.HP -= spellModel.DamageValue;
             enemy.ShowHp(spellModel.DamageValue);
 
-            if (spellModel.HealValue < 0)
+            if (spellModel.HealValue > 0)
             {
                 _playerView.HP += spellModel.HealValue;
                 _playerView.ShowHp(spellModel.HealValue);
