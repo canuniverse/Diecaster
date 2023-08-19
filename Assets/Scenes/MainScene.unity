@@ -2730,7 +2730,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Floor-1
+  m_text: Diecaster
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 458dd8d07b35046559edeca300a97a04, type: 2}
   m_sharedMaterial: {fileID: -6786603423233533371, guid: 458dd8d07b35046559edeca300a97a04, type: 2}
