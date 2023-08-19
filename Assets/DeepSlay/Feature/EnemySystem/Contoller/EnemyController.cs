@@ -103,12 +103,7 @@ namespace DeepSlay
                 _playerView.HP += spellModel.HealValue;
                 _playerView.ShowHp(-spellModel.HealValue);
             }
-
-            if (enemy.EnemyModel.HP <= 0)
-            {
-                enemy.Die();
-            }
-
+            
             _diceViewService.DeSpawn(_spellView);
             _spellView = null;
             
