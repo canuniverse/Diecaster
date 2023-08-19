@@ -119,17 +119,16 @@ namespace DeepSlay
                     _playerView.ShowHp(damage);
                 });
 
-                if (_playerView.HP <= 0)
-                {
-                    _battleResultView.ShowResult(false);
-                    return;
-                }
-
                 attackDelay += 0.5f;
             }
 
             Observable.Timer(TimeSpan.FromSeconds(attackDelay)).Subscribe(_ =>
             {
+                if (_playerView.HP <= 0)
+                {
+                    _battleResultView.ShowResult(false);
+                }
+                
                 _battlePhaseRepository.BattlePhase = BattlePhase.Draw;
             });
         }
