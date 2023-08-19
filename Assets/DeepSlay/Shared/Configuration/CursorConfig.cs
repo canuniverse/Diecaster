@@ -11,5 +11,6 @@ namespace DeepSlay
         public Texture2D CursorGrab;
         public Texture2D CursorGrabbing;
         public Texture2D CursorDiscard;
+        public Texture2D CursorAttack;
     }
 }

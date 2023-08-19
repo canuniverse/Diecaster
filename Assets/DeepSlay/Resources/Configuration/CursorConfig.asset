@@ -18,3 +18,4 @@ MonoBehaviour:
   CursorGrab: {fileID: 2800000, guid: cb99f6bd868cf468e9d3bc262355e43c, type: 3}
   CursorGrabbing: {fileID: 2800000, guid: 3e95968a031444dc4b644300b23cc26f, type: 3}
   CursorDiscard: {fileID: 2800000, guid: a5b59bf820562480b8d5c783e6e213f4, type: 3}
+  CursorAttack: {fileID: 2800000, guid: 30dd554c8d83b4e688439d6bf193854f, type: 3}

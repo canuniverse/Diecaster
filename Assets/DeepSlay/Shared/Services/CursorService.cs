@@ -36,6 +36,10 @@ namespace DeepSlay
                     var cursorDiscard = _cursorConfig.CursorDiscard;
                     SetCursor(cursorDiscard, new Vector2(cursorDiscard.width / 2f, cursorDiscard.height / 2f));
                     break;
+                case CursorType.CursorAttack:
+                    var cursorAttack = _cursorConfig.CursorAttack;
+                    SetCursor(cursorAttack, new Vector2(cursorAttack.width / 2f, cursorAttack.height / 2f));
+                    break;
             }
         }
 
@@ -53,5 +57,6 @@ namespace DeepSlay
         CursorGrab,
         CursorGrabbing,
         CursorDiscard,
+        CursorAttack,
     }
 }

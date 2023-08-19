@@ -9,7 +9,7 @@ using Zenject;
 
 namespace DeepSlay
 {
-    public class DiceView : PoolView<DiceView>, IPointerEnterHandler, 
+    public class DiceView : PoolView<DiceView>, IPointerEnterHandler,
         IPointerExitHandler, IPointerClickHandler, IPointerUpHandler, IPointerDownHandler
     {
         [SerializeField] private Image _iconImage;
@@ -22,7 +22,7 @@ namespace DeepSlay
         private SignalBus _signalBus;
         private AtlasConfig _atlasConfig;
         private BattlePhaseRepository _phaseRepository;
-        
+
         [Inject]
         private void Construct(
             SignalBus signalBus,
@@ -39,7 +39,7 @@ namespace DeepSlay
             Spell = string.Empty;
             _iconImage.gameObject.SetActive(false);
             _spellIcons.ForEach(view => view.gameObject.SetActive(false));
-            
+
             base.SetActive();
         }
 
@@ -66,25 +66,19 @@ namespace DeepSlay
         {
             var dieNames = Enum.GetNames(typeof(Elements)).ToList();
 
-            
+
             dieNames = dieNames.Randomize();
 
             var time = 0f;
 
             foreach (var dieName in dieNames)
             {
-                Observable.Timer(TimeSpan.FromSeconds(time)).Subscribe(_ =>
-                {
-                    ShowIcon($"{dieName}");
-                });
+                Observable.Timer(TimeSpan.FromSeconds(time)).Subscribe(_ => { ShowIcon($"{dieName}"); });
 
                 time += 0.1f;
             }
 
-            Observable.Timer(TimeSpan.FromSeconds(time + 0.1f)).Subscribe(_ =>
-            {
-                ShowIcon($"{element}");
-            });
+            Observable.Timer(TimeSpan.FromSeconds(time + 0.1f)).Subscribe(_ => { ShowIcon($"{element}"); });
 
             Element = element;
         }
@@ -95,7 +89,7 @@ namespace DeepSlay
             {
                 CursorService.SetCursor(CursorType.CursorDiscard);
             }
-            else if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell 
+            else if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell
                      && !string.IsNullOrEmpty(Spell))
             {
                 CursorService.SetCursor(CursorType.CursorSelect);
@@ -112,13 +106,18 @@ namespace DeepSlay
             if (_phaseRepository.BattlePhase == BattlePhase.Discard)
             {
                 CursorService.SetCursor(CursorType.CursorDefault);
-                _signalBus.Fire(new DiscardDiceSignal{ DieIndex = DiceIndex });
+                _signalBus.Fire(new DiscardDiceSignal { DieIndex = DiceIndex });
+            }
+            else if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell
+                     && !string.IsNullOrEmpty(Spell))
+            {
+                _signalBus.Fire(new SpellSelectedSignal { SpellName = Spell });
             }
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell 
+            if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell
                 && !string.IsNullOrEmpty(Spell))
             {
                 CursorService.SetCursor(CursorType.CursorSelect);
@@ -127,7 +126,7 @@ namespace DeepSlay
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell 
+            if (_phaseRepository.BattlePhase == BattlePhase.SelectSpell
                 && !string.IsNullOrEmpty(Spell))
             {
                 CursorService.SetCursor(CursorType.CursorSelectTap);

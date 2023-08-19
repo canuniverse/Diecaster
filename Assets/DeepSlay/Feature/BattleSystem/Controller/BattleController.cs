@@ -27,12 +27,20 @@ namespace DeepSlay
             _spellConfig = spellConfig;
             _diceViewService = viewService;
             _battlePhaseRepository = phaseRepository;
+
+            _signalBus.Subscribe<SpellSelectedSignal>(OnSpellSelected);
             _signalBus.Subscribe<DiceSpawnCompletedSignal>(OnDiceSpawnCompletedSignal);
         }
 
         public void Dispose()
         {
+            _signalBus.Unsubscribe<SpellSelectedSignal>(OnSpellSelected);
             _signalBus.Unsubscribe<DiceSpawnCompletedSignal>(OnDiceSpawnCompletedSignal);
+        }
+
+        private void OnSpellSelected(SpellSelectedSignal signal)
+        {
+            _battlePhaseRepository.BattlePhase = BattlePhase.SelectTarget;
         }
 
         private void OnDiceSpawnCompletedSignal(DiceSpawnCompletedSignal signal)
@@ -56,7 +64,7 @@ namespace DeepSlay
         private void CheckCombinations()
         {
             var spells = _spellConfig.SpellModels;
-            
+
             var views = _diceViewService.Views;
             if (views.Count < 2)
             {
@@ -66,26 +74,30 @@ namespace DeepSlay
             var group1 = new List<DiceView> { views[0], views[1] };
             var group2 = views.Count > 2 ? new List<DiceView> { views[1], views[2] } : null;
             var group3 = views.Count > 3 ? new List<DiceView> { views[2], views[3] } : null;
-            
+
             var spell1 = spells.Find(spell => spell.Combinations.Any(comb =>
                 comb.Combination.SequenceEqual(group1.Select(e => e.Element).ToList())));
-            
-            var spell2 = group2 == null ? null : spells.Find(spell => spell.Combinations.Any(comb =>
-                comb.Combination.SequenceEqual(group2.Select(e => e.Element).ToList())));
-            
-            var spell3 = group3 == null ? null : spells.Find(spell => spell.Combinations.Any(comb =>
-                comb.Combination.SequenceEqual(group3.Select(e => e.Element).ToList())));
+
+            var spell2 = group2 == null
+                ? null
+                : spells.Find(spell => spell.Combinations.Any(comb =>
+                    comb.Combination.SequenceEqual(group2.Select(e => e.Element).ToList())));
+
+            var spell3 = group3 == null
+                ? null
+                : spells.Find(spell => spell.Combinations.Any(comb =>
+                    comb.Combination.SequenceEqual(group3.Select(e => e.Element).ToList())));
 
             if (spell1 != null)
             {
                 CombineElements(spell1, group1, _bagView.SpellParents[0]);
             }
-            
+
             if (spell1 == null && spell2 != null)
             {
                 CombineElements(spell2, group2, _bagView.SpellParents[0]);
             }
-            
+
             if (spell3 != null)
             {
                 CombineElements(spell3, group3, _bagView.SpellParents[1]);
@@ -100,7 +112,7 @@ namespace DeepSlay
             var sequence = DOTween.Sequence();
 
             var position = parent.position;
-            
+
             sequence.Append(viewA.transform.DOMove(position, 0.5f).SetEase(Ease.InSine));
             sequence.Append(viewB.transform.DOMove(position, 0.5f).SetEase(Ease.InSine));
 
@@ -108,13 +120,13 @@ namespace DeepSlay
             {
                 _diceViewService.DeSpawn(viewA);
                 _diceViewService.DeSpawn(viewB);
-                
+
                 var spell = _diceViewService.Spawn();
                 spell.SetSpell(spellModel);
-            
+
                 spell.transform.position = position;
                 spell.transform.SetParent(parent);
-                
+
                 _battlePhaseRepository.BattlePhase = BattlePhase.SelectSpell;
             });
         }
