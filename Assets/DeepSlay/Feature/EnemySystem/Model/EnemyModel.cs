@@ -10,5 +10,6 @@ namespace DeepSlay
         public int MaxHP = 10;
         public int BasicAttackMin = 5;
         public int BasicAttackMax = 10;
+        public bool IsStuned = false;
     }
 }

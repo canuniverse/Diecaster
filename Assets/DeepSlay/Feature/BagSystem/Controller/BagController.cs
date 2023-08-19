@@ -37,7 +37,7 @@ namespace DeepSlay
 
             dieModels = new List<DieModel>
             {
-                fireDie, fireDie, waterDie, waterDie
+                fireDie, fireDie, waterDie, airDie
             };
             
             var bag = new List<DieModel>();

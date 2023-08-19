@@ -69,9 +69,29 @@ namespace DeepSlay
 
             var enemy = signal.EnemyView;
 
-            enemy.EnemyModel.HP -= spellModel.DamageValue;
-            enemy.ShowHp(spellModel.DamageValue);
+            if (spellModel.IsStun)
+            {
+                enemy.EnemyModel.IsStuned = true;
+            }
+            
+            if (!spellModel.IsAreaEffect)
+            {
+                enemy.EnemyModel.HP -= spellModel.DamageValue;
+                enemy.ShowHp(spellModel.DamageValue);
+            }
+            else
+            {
+                foreach (var enemyView in _enemyAreaView.EnemyViews)
+                {
+                    if (enemyView.gameObject.activeSelf)
+                    {
+                        enemyView.EnemyModel.HP -= spellModel.DamageValue;
+                        enemyView.ShowHp(spellModel.DamageValue);
+                    }
+                }
 
+            }
+            
             if (spellModel.HealValue > 0)
             {
                 _playerView.HP += spellModel.HealValue;
@@ -111,6 +131,10 @@ namespace DeepSlay
             foreach (var enemy in views)
             {
                 var model = enemy.EnemyModel;
+                if (model.IsStuned)
+                {
+                    continue;
+                }
                 var damage = Random.Range(model.BasicAttackMin, model.BasicAttackMax);
 
                 Observable.Timer(TimeSpan.FromSeconds(attackDelay)).Subscribe(_ =>

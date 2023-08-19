@@ -19,6 +19,7 @@ MonoBehaviour:
     IsAreaEffect: 0
     DamageValue: 4
     HealValue: 0
+    IsStun: 0
   - Name: Steam
     Combinations:
     - Combination: 0100000002000000
@@ -26,6 +27,7 @@ MonoBehaviour:
     IsAreaEffect: 0
     DamageValue: 2
     HealValue: 2
+    IsStun: 0
   - Name: Firestorm
     Combinations:
     - Combination: 0100000004000000
@@ -33,9 +35,26 @@ MonoBehaviour:
     IsAreaEffect: 1
     DamageValue: 2
     HealValue: 0
+    IsStun: 0
   - Name: Heal
     Combinations:
     - Combination: 0200000002000000
     IsAreaEffect: 0
     DamageValue: 0
     HealValue: 4
+    IsStun: 0
+  - Name: Freeze
+    Combinations:
+    - Combination: 0400000002000000
+    - Combination: 0200000004000000
+    IsAreaEffect: 0
+    DamageValue: 0
+    HealValue: 0
+    IsStun: 1
+  - Name: Tornado
+    Combinations:
+    - Combination: 0400000004000000
+    IsAreaEffect: 0
+    DamageValue: 100
+    HealValue: 0
+    IsStun: 0

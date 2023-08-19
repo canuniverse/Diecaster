@@ -11,6 +11,7 @@ namespace DeepSlay
         public bool IsAreaEffect;
         public int DamageValue;
         public int HealValue;
+        public bool IsStun;
     }
 
     [Serializable]
