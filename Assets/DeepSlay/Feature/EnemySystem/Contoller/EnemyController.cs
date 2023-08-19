@@ -81,13 +81,11 @@ namespace DeepSlay
             }
             else
             {
-                foreach (var enemyView in _enemyAreaView.EnemyViews)
+                var currentEnemies = _enemyAreaView.EnemyViews.FindAll(view => view.gameObject.activeSelf);
+                foreach (var enemyView in currentEnemies)
                 {
-                    if (enemyView.gameObject.activeSelf)
-                    {
-                        enemyView.EnemyModel.HP -= spellModel.DamageValue;
-                        enemyView.ShowHp(spellModel.DamageValue);
-                    }
+                    enemyView.EnemyModel.HP -= spellModel.DamageValue;
+                    enemyView.ShowHp(spellModel.DamageValue);
                 }
 
             }
@@ -167,6 +165,15 @@ namespace DeepSlay
                 var enemy = _enemyConfig.EnemyModels.Find(enemyModel => enemyModel.Element == element);
                 var clone = (EnemyModel)ObjectClone.DeepClone(enemy);
                 _enemyAreaView.EnemyViews[i].SetEnemy(clone);
+            }
+        }
+
+        public void ResetEnemyStatuses()
+        {
+            var currentEnemies = _enemyAreaView.EnemyViews.FindAll(view => view.gameObject.activeSelf);
+            foreach (var enemyView in currentEnemies)
+            {
+                enemyView.EnemyModel.IsStuned = false;
             }
         }
     }

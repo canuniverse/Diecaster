@@ -49,6 +49,7 @@ namespace DeepSlay
 
         private void OnDiceSpawnCompletedSignal(DiceSpawnCompletedSignal signal)
         {
+            _enemyController.ResetEnemyStatuses();
             RefineRolledList();
         }
 
