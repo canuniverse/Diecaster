@@ -15,6 +15,7 @@ namespace DeepSlay
         private SpellConfig _spellConfig;
         private EnemyAreaView _enemyAreaView;
         private DiceViewService _diceViewService;
+        private BattleResultView _battleResultView;
         private BattlePhaseRepository _battlePhaseRepository;
 
         private DiceView _spellView;
@@ -26,6 +27,7 @@ namespace DeepSlay
             SpellConfig spellConfig,
             PlayerView playerView,
             DiceViewService diceViewService,
+            BattleResultView battleResultView,
             BattlePhaseRepository battlePhaseRepository,
             EnemyAreaView enemyAreaView)
         {
@@ -36,6 +38,7 @@ namespace DeepSlay
             _enemyConfig = enemyConfig;
             _enemyAreaView = enemyAreaView;
             _diceViewService = diceViewService;
+            _battleResultView = battleResultView;
             _battlePhaseRepository = battlePhaseRepository;
 
             _signalBus.Subscribe<EnemySelectedSignal>(OnEnemySelected);
@@ -76,6 +79,13 @@ namespace DeepSlay
 
             _diceViewService.DeSpawn(_spellView);
             _spellView = null;
+            
+            var enemies = _enemyAreaView.EnemyViews.FindAll(view => view.gameObject.activeSelf);
+            if (enemies.Count < 1)
+            {
+                _battleResultView.ShowResult(true);
+                return;
+            }
 
             var diceViews = _diceViewService.Views;
             var spells = diceViews.FindAll(view => !string.IsNullOrEmpty(view.Spell));
@@ -105,7 +115,8 @@ namespace DeepSlay
 
                 if (_playerView.HP <= 0)
                 {
-                    // die
+                    _battleResultView.ShowResult(false);
+                    return;
                 }
 
                 attackDelay += 0.5f;
