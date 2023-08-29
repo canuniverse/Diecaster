@@ -17,7 +17,7 @@ MonoBehaviour:
     Combinations:
     - Combination: 0100000001000000
     IsAreaEffect: 0
-    DamageValue: 4
+    DamageValue: 5
     HealValue: 0
     IsStun: 0
   - Name: Steam
